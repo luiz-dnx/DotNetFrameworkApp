@@ -11,7 +11,7 @@
         },
         "scripts": {
           "preInstall": {
-            "file": "SetupScripts/InstallDependencies.ps1"
+            "file": "InstallDependencies.ps1"
           }
         }
       }
