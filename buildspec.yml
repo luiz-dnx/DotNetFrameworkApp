@@ -1,0 +1,50 @@
+version: 0.2
+
+env:
+  variables:
+    SOLUTION: DotNetFrameworkApp.sln
+    DOTNET_FRAMEWORK: 4.8
+    PACKAGE_DIRECTORY: .\packages
+
+phases:
+  install:
+    commands:      
+      - echo "Use this phase to install any dependency that your application may need before building it."
+  pre_build:
+    commands:
+      - nuget restore $env:SOLUTION -PackagesDirectory $env:PACKAGE_DIRECTORY
+  build:
+    commands:
+      - msbuild .\DotNetFrameworkApp.API\DotNetFrameworkApp.API.csproj /t:package /p:TargetFrameworkVersion=v$env:DOTNET_FRAMEWORK /p:Configuration=Release
+      - msbuild .\DotNetFrameworkApp.Worker.WebApp\DotNetFrameworkApp.Worker.WebApp.csproj /t:package /p:TargetFrameworkVersion=v$env:DOTNET_FRAMEWORK /p:Configuration=Release
+      - msbuild .\DotNetFrameworkApp.Worker\DotNetFrameworkApp.Worker.csproj /t:build /p:TargetFrameworkVersion=v$env:DOTNET_FRAMEWORK /p:Configuration=Release
+  post_build:
+    commands:
+      - echo "Preparing API Source bundle artifacts"
+      - $publishApiFolder = ".\publish\workspace\api"; mkdir $publishApiFolder
+      - cp .\DotNetFrameworkApp.API\obj\Release\Package\DotNetFrameworkApp.API.zip $publishApiFolder\DotNetFrameworkApp.API.zip
+      - cp .\SetupScripts\InstallDependencies.ps1 $publishApiFolder\InstallDependencies.ps1
+      - cp .\DotNetFrameworkApp.API\aws-windows-deployment-manifest.json $publishApiFolder\aws-windows-deployment-manifest.json
+      - cp .\DotNetFrameworkApp.API\.ebextensions $publishApiFolder -Recurse
+      - echo "Preparing Worker Source bundle artifacts"
+      - $publishWorkerFolder = ".\publish\workspace\worker"; mkdir $publishWorkerFolder
+      - cp .\DotNetFrameworkApp.Worker.WebApp\obj\Release\Package\DotNetFrameworkApp.Worker.WebApp.zip $publishWorkerFolder\DotNetFrameworkApp.Worker.WebApp.zip
+      - cp -r .\DotNetFrameworkApp.Worker\bin\Release\ $publishWorkerFolder\DotNetFrameworkApp.Worker
+      - cp .\SetupScripts\InstallWorker.ps1 $publishWorkerFolder\InstallWorker.ps1
+      - cp .\DotNetFrameworkApp.Worker.WebApp\aws-windows-deployment-manifest.json $publishWorkerFolder\aws-windows-deployment-manifest.json
+      - cp .\DotNetFrameworkApp.Worker.WebApp\.ebextensions $publishWorkerFolder -Recurse
+
+artifacts:
+  files:
+    - '**/*'
+  secondary-artifacts:
+    api:
+      name: api
+      base-directory: $publishApiFolder
+      files:
+        - '**/*'
+    worker:
+      name: worker
+      base-directory: $publishWorkerFolder
+      files:
+        - '**/*'

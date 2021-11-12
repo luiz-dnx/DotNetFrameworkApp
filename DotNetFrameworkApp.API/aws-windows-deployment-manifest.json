@@ -1,0 +1,20 @@
+{
+  "manifestVersion": 1,
+  "deployments": {
+    "msDeploy": [
+      {
+        "name": "api",
+        "parameters": {
+          "appBundle": "DotNetFrameworkApp.API.zip",
+          "iisPath": "/",
+          "iisWebSite": "Default Web Site"
+        },
+        "scripts": {
+          "preInstall": {
+            "file": "SetupScripts/InstallDependencies.ps1"
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,2 @@
+Start-Process ".\Required3rdParty\LLBLGenPro-v42-Full-setup.exe" /S -NoNewWindow -Wait -PassThru
+Copy-Item ".\Required3rdParty\LLBLGen Pro v4.2" "C:\Program Files (x86)\Solutions Design\" -Recurse -Force

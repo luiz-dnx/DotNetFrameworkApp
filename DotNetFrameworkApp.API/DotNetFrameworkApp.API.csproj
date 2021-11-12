@@ -151,6 +151,8 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include=".ebextensions\waf.config" />
+    <Content Include="aws-windows-deployment-manifest.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>

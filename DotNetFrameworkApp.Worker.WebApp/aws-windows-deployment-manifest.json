@@ -1,0 +1,20 @@
+﻿{
+  "manifestVersion": 1,
+  "deployments": {
+    "msDeploy": [
+      {
+        "name": "worker",
+        "parameters": {
+          "appBundle": "DotNetFrameworkApp.Worker.WebApp.zip",
+          "iisPath": "/",
+          "iisWebSite": "Default Web Site"
+        },
+        "scripts": {
+          "preInstall": {
+            "file": "InstallWorker.ps1"
+          }
+        }
+      }
+    ]
+  }
+}
