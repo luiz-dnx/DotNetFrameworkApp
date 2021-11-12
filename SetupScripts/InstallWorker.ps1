@@ -27,7 +27,7 @@ if ($existingService) {
 Copy-Item $binFolder $serviceFolder -Recurse -Force
 
 echo "Installing the service."
-New-Service -BinaryPathName $exePath -Name $serviceName -DisplayName $serviceName -StartupType Automatic -Description "Runs automated Carefo routines"
+InstallUtil $exePath /unattended
 echo "Installed the service."
 echo "Starting the service."
 Start-Service $serviceName
