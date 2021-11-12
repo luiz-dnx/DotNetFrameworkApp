@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using System.Web.Mvc;
 
 namespace DotNetFrameworkApp.API
 {
@@ -15,6 +16,12 @@ namespace DotNetFrameworkApp.API
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "HealthCheck",
+                routeTemplate: "",
+                defaults: new { controller = "Health", action = "Get" }
             );
         }
     }
